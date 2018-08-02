@@ -11,4 +11,12 @@ pageRouter
       })
   })
 
+pageRouter
+  .get('/about', (req, res)=>{
+    fs.readFile(`${__dirname}/../views/about.html`, 'utf-8')
+      .then((htmlData)=>{
+        res.send(htmlData)
+      })
+  })
+
 module.exports = pageRouter
