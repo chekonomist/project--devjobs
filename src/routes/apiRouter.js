@@ -1,16 +1,7 @@
 const Router = require('express').Router
-
 const apiRouter = Router()
 
-apiRouter.get('/', (req, res)=>{
-  res.json({
-    '/api/jobs' : 'Show jobs',
-    '/api/companies' : 'Show companies'
-  })
-})
-
-apiRouter.get('/jobs', (req, res)=>{
-  res.json([
+const jobsRows = [
     {
     title: 'SQL Server Administrator - Postgres',
     description: 'Bring to the table win-win survival strategies to ensure proactive domination. User generated content in real-time will have multiple touchpoints for offshoring.',
@@ -43,24 +34,42 @@ apiRouter.get('/jobs', (req, res)=>{
     fullTime: false,
     companyId: 2
   }
-  ])
-})
-
-apiRouter.get('/companies', (req, res)=>{
-  res.json([
-    {
-    name: 'Company ABC',
-    description: 'Energistically network alternative technology deploying impactful partnerships.',
-    imageLink: 'http://www.tinygraphs.com/labs/isogrids/hexa16/nsuaio',
-    location: 'Guadalajara'
+]
+const companiesRows = [
+  {
+  name: 'Company ABC',
+  description: 'Energistically network alternative technology deploying impactful partnerships.',
+  imageLink: 'http://www.tinygraphs.com/labs/isogrids/hexa16/nsuaio',
+  location: 'Guadalajara'
   },
   {
-    name: 'Lossless Enterprises',
-    description: 'Quickly strategizing team driven "outside the box" thinking.',
-    location: 'Ciudad de Mexico',
-    imageLink: 'http://www.tinygraphs.com/labs/isogrids/hexa16/8282',
+  name: 'Lossless Enterprises',
+  description: 'Quickly strategizing team driven "outside the box" thinking.',
+  location: 'Ciudad de Mexico',
+  imageLink: 'http://www.tinygraphs.com/labs/isogrids/hexa16/8282',
   }
-  ])
+]
+
+const fetchCompanies = (req, res)=>{
+  const db = req.app.locals.db
+
+  db.select('*').from('companies')
+    .then((records)=>{
+      res.json(records)
+    })
+  }
+
+apiRouter.get('/', (req, res)=>{
+  res.json({
+    '/api/jobs' : 'Show jobs',
+    '/api/companies' : 'Show companies'
+  })
 })
+
+apiRouter.get('/jobs', (req, res)=>{
+  res.json(jobsRows)
+})
+
+apiRouter.get('/companies', fetchCompanies)
 
 module.exports = apiRouter

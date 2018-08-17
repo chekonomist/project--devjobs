@@ -20,5 +20,6 @@ const devConfig = {
 }
 
 module.exports = {
-  development: devConfig
+  development: devConfig,
+  production: {}
 };
