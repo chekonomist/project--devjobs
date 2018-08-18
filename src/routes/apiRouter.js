@@ -1,4 +1,7 @@
 const Router = require('express').Router
+const Company = require('../models/Company.js')
+const Job = require('../models/Job.js')
+
 const apiRouter = Router()
 
 const jobsRows = [
@@ -51,13 +54,31 @@ const companiesRows = [
 ]
 
 const fetchCompanies = (req, res)=>{
-  const db = req.app.locals.db
+  Company.query()
+  .eager('companyJobs')
+  .then((recordsWithCompanies)=>{
+    res.status(200).json(recordsWithCompanies)
+  })
+  .catch((err)=>{
+    console.log("ya bailó Bertha");
+    var errorMessage = err.toString()
+    res.status(500).send(errorMessage)
+  })
+}
 
-  db.select('*').from('companies')
-    .then((records)=>{
-      res.json(records)
-    })
-  }
+const fetchJobs = (req, res)=>{
+  Job.query()
+  .eager("companiesList")
+  .then((recordsWithJobs)=>{
+    res.status(200).json(recordsWithJobs)
+  })
+  .catch((err)=>{
+    console.log("valió madre");
+    var errorMessage = err.toString()
+    res.status(500).send(errorMessage)
+  })
+
+}
 
 apiRouter.get('/', (req, res)=>{
   res.json({
@@ -66,9 +87,7 @@ apiRouter.get('/', (req, res)=>{
   })
 })
 
-apiRouter.get('/jobs', (req, res)=>{
-  res.json(jobsRows)
-})
+apiRouter.get('/jobs', fetchJobs)
 
 apiRouter.get('/companies', fetchCompanies)
 
