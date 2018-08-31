@@ -65,6 +65,32 @@ const fetchCompanies = (req, res)=>{
     res.status(500).send(errorMessage)
   })
 }
+const fetchOneCompany = (req, res)=>{
+  const db = req.app.locals.db
+  const idInRoute = req.params._id
+
+  db.select('*').from('companies')
+    .where('id', '=', idInRoute)
+    .then((records)=>{
+      res.json(records[0])
+  })
+}
+const createOneCompany = (req, res)=>{
+  Company
+    .query()
+    .insert(req.body)
+    .then((newCompany)=>{
+      res.status(200).json(newCompany)
+    })
+}
+const editOneCompany = (req, res)=>{
+  Company
+    .query()
+    .updateAndFetchById( req.params._id , req.body )
+    .then((updateCompany)=>{
+      res.status(200).json(updateCompany)
+    })
+}
 
 const fetchJobs = (req, res)=>{
   Job.query()
@@ -79,6 +105,40 @@ const fetchJobs = (req, res)=>{
   })
 
 }
+const fetchOneJob = (req, res)=>{
+  const db = req.app.locals.db
+  const idInRoute = req.params._id
+
+  db.select('*').from('jobs')
+    .where('id', '=', idInRoute)
+    .then((jobsRecords)=>{
+      res.json(jobsRecords[0])
+    })
+}
+const createOneJob = (req, res)=>{
+  Job
+    .query()
+    .insert(req.body)
+    .then((newJob)=>{
+      res.status(200).json(newJob)
+    })
+}
+const editOneJob = (req, res)=>{
+  Job
+    .query()
+    .updateAndFetchById(req.params._id, req.body)
+    .then((updatedJob)=>{
+      res.status(200).json(updatedJob)
+    })
+}
+const deleteOneJob = (req, res)=>{
+  Job
+    .query()
+    .deleteById(req.params._id)
+    .then((deletedJob)=>{
+      res.status(200).json(deletedJob)
+    })
+}
 
 apiRouter.get('/', (req, res)=>{
   res.json({
@@ -87,8 +147,18 @@ apiRouter.get('/', (req, res)=>{
   })
 })
 
-apiRouter.get('/jobs', fetchJobs)
+apiRouter
+  .get('/companies', fetchCompanies)
+  .get('/companies/:_id', fetchOneCompany)
+  .post('/companies', createOneCompany)
+  .put('/companies/:_id', editOneCompany)
 
-apiRouter.get('/companies', fetchCompanies)
+apiRouter
+  .get('/jobs', fetchJobs)
+  .get('/jobs/:_id', fetchOneJob)
+  .post('/jobs', createOneJob)
+  .put('/jobs/:_id', editOneJob)
+  .delete('/jobs/:_id', deleteOneJob)
+
 
 module.exports = apiRouter

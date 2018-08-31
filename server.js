@@ -4,6 +4,9 @@ const express = require('express')
 const knex = require('knex')
 const { Model } = require('objection')
 
+const bodyParser = require('body-parser')
+
+
 const dbConfigObj = require('./knexfile.js')
 
 const pageRouter = require('./src/routes/pageRouter.js')
@@ -15,6 +18,9 @@ const PORT = 3000
 const appDb = knex(dbConfigObj.development)
 Model.knex(appDb)
 app.locals.db = appDb
+
+app.use( bodyParser.urlencoded({ extended: false }) )
+app.use( bodyParser.json() )
 
 app.use( express.static( `${__dirname}/public` ) )
 
