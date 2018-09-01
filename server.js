@@ -59,7 +59,7 @@ app.use('/api', apiRouter)
 app.use('/auth', authRouter)
 
 app.use((req, res)=>{
-  res.render('404.ejs')
+  res.render('reactApp.ejs')
 })
 
 app.listen(PORT, ()=>{

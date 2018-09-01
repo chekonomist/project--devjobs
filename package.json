@@ -4,8 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "npm-run-all dev:server",
-    "dev:server": "NODE_ENV=development nodemon server.js server.js --watch src --watch server.js",
+    "dev": "npm-run-all --parallel dev:server dev:webpack",
+    "dev:webpack": "./node_modules/.bin/webpack --watch",
+    "dev:server": "NODE_ENV=development nodemon server.js --watch src --watch server.js --ignore src/client",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,9 +25,19 @@
     "objection": "1.2.2",
     "passport": "0.4.0",
     "passport-local": "1.0.0",
-    "pg": "^7.4.3"
+    "pg": "^7.4.3",
+    "react": "16.1.0",
+    "react-dom": "16.1.0",
+    "react-router-dom": "4.2.0"
   },
   "devDependencies": {
-    "nodemon": "1.12.1"
+    "babel-core": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "6.26.0",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-react": "6.24.1",
+    "nodemon": "1.12.1",
+    "webpack": "3.8.1"
   }
 }
